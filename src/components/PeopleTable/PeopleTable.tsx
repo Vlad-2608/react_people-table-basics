@@ -1,58 +1,41 @@
-import { Person } from '../../types';
-import { NavLink, useParams } from 'react-router-dom';
-import classNames from 'classnames';
 import React from 'react';
+import { Person } from '../../types';
+import { PersonLink } from '../PersonLink';
 
-type Props = {
-  person: Person;
-};
+interface Props {
+  peopleList: Person[];
+}
 
-export const PeopleTable: React.FC<Props> = ({ person }) => {
-  const { personId } = useParams();
-  const selectedPerson = personId ? personId : '';
+export const PeopleTable: React.FC<Props> = ({ peopleList }) => {
+  const findParent = (parentName: string) => {
+    return peopleList.find(person => person.name === parentName);
+  };
 
   return (
-    <tr
-      data-cy="person"
-      className={classNames({
-        'has-background-warning': selectedPerson === person.slug,
-      })}
+    <table
+      data-cy="peopleTable"
+      className="table is-striped is-hoverable is-narrow is-fullwidth"
     >
-      <td>
-        <NavLink
-          to={`/people/${person.slug}`}
-          className={classNames({ 'has-text-danger': person.sex === 'f' })}
-        >
-          {person.name}
-        </NavLink>
-      </td>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Sex</th>
+          <th>Born</th>
+          <th>Died</th>
+          <th>Mother</th>
+          <th>Father</th>
+        </tr>
+      </thead>
 
-      <td>{person.sex}</td>
-      <td>{person.born}</td>
-      <td>{person.died}</td>
-
-      <td>
-        {person.mother ? (
-          <NavLink
-            to={`/people/${person.mother.slug}`}
-            className="has-text-danger"
-          >
-            {person.motherName}
-          </NavLink>
-        ) : (
-          person.motherName || '-'
-        )}
-      </td>
-
-      <td>
-        {person.father ? (
-          <NavLink to={`/people/${person.father.slug}`}>
-            {person.fatherName}
-          </NavLink>
-        ) : (
-          person.fatherName || '-'
-        )}
-      </td>
-    </tr>
+      <tbody>
+        {peopleList.map(person => (
+          <PersonLink
+            key={person.slug}
+            person={person}
+            findParent={findParent}
+          />
+        ))}
+      </tbody>
+    </table>
   );
 };

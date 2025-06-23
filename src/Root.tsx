@@ -1,13 +1,14 @@
 import {
+  Navigate,
+  Route,
   HashRouter as Router,
   Routes,
-  Route,
-  Navigate,
 } from 'react-router-dom';
-import { HomePage } from './pages/HomePage';
-import { PeoplePage } from './pages/PeoplePage';
 import { App } from './App';
-import { NotFoundPage } from './pages/NotFoundPage';
+
+import { NotFoundPage } from './components/NotFoundPage';
+import { PeoplePage } from './components/PeoplePage';
+import { HomePage } from './components/HomePage';
 import React from 'react';
 
 export const Root = () => (
@@ -15,12 +16,10 @@ export const Root = () => (
     <Routes>
       <Route path="/" element={<App />}>
         <Route index element={<HomePage />} />
-
-        <Route path="people/:personId?" element={<PeoplePage />} />
-
+        <Route path="people/:slugs?" element={<PeoplePage />} />
+        <Route path="home" element={<Navigate to="/" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
-      <Route path="/home" element={<Navigate to="/" replace />} />
     </Routes>
   </Router>
 );
